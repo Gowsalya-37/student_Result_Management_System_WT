@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Result System</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+    <style>
+        body {
+            background: linear-gradient(to right, #74ebd5, #ACB6E5);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .card-box {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1s ease;
+        }
+
+        .title {
+            font-weight: bold;
+            text-align: center;
+            color: #0d6efd;
+        }
+
+        .result-pass {
+            background-color: #d1e7dd;
+            color: #0f5132;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .result-fail {
+            background-color: #f8d7da;
+            color: #842029;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .grade-box {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            color: #333;
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 15px;
+            color: gray;
+            font-size: 14px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body ng-controller="myController">
+
+    <div class="card p-4 bg-white card-box">
+
+        <h2 class="title mb-4">Student Result Management System</h2>
+
+        <!-- Student Name -->
+        <div class="mb-3">
+            <label class="form-label">Student Name</label>
+            <input type="text" class="form-control"
+                ng-model="student.name"
+                placeholder="Enter Student Name">
+        </div>
+
+        <!-- Marks -->
+        <div class="mb-3">
+            <label class="form-label">Tamil Marks</label>
+            <input type="number" class="form-control"
+                ng-model="student.tamil"
+                placeholder="Enter Tamil Marks">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">English Marks</label>
+            <input type="number" class="form-control"
+                ng-model="student.english"
+                placeholder="Enter English Marks">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Maths Marks</label>
+            <input type="number" class="form-control"
+                ng-model="student.maths"
+                placeholder="Enter Maths Marks">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Science Marks</label>
+            <input type="number" class="form-control"
+                ng-model="student.science"
+                placeholder="Enter Science Marks">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Social Marks</label>
+            <input type="number" class="form-control"
+                ng-model="student.social"
+                placeholder="Enter Social Marks">
+        </div>
+
+        <!-- Button -->
+        <div class="d-grid">
+            <button class="btn btn-primary btn-lg"
+                ng-click="calculateResult()">
+                Calculate Result
+            </button>
+        </div>
+
+        <hr>
+
+        <!-- Output Section -->
+        <div ng-if="showResult">
+
+            <h4 class="text-center">
+                Hello, {{student.name}}
+            </h4>
+
+            <div class="grade-box mb-3">
+                Total Marks: {{total}} / 500
+            </div>
+
+            <div class="grade-box mb-3">
+                Percentage: {{percentage}}%
+            </div>
+
+            <div class="grade-box mb-3">
+                Grade: {{grade}}
+            </div>
+
+            <!-- Pass / Fail -->
+            <div ng-if="result == 'PASS'" class="result-pass">
+                Congratulations! You are PASS
+            </div>
+
+            <div ng-if="result == 'FAIL'" class="result-fail">
+                Sorry! You are FAIL
+            </div>
+
+        </div>
+
+        <div class="footer-text">
+            Developed using HTML, CSS, Bootstrap, AngularJS & JavaScript
+        </div>
+
+    </div>
+
+    <!-- AngularJS Script -->
+    <script>
+
+        var app = angular.module("myApp", []);
+
+        app.controller("myController", function ($scope) {
+
+            $scope.student = {};
+            $scope.showResult = false;
+
+            $scope.calculateResult = function () {
+
+                var t = Number($scope.student.tamil || 0);
+                var e = Number($scope.student.english || 0);
+                var m = Number($scope.student.maths || 0);
+                var s = Number($scope.student.science || 0);
+                var so = Number($scope.student.social || 0);
+
+                $scope.total = t + e + m + s + so;
+
+                $scope.percentage = (($scope.total / 500) * 100).toFixed(2);
+
+                // Pass or Fail
+                if (t >= 35 && e >= 35 && m >= 35 && s >= 35 && so >= 35) {
+                    $scope.result = "PASS";
+                } else {
+                    $scope.result = "FAIL";
+                }
+
+                // Grade Calculation
+                if ($scope.percentage >= 90) {
+                    $scope.grade = "A+";
+                }
+                else if ($scope.percentage >= 75) {
+                    $scope.grade = "A";
+                }
+                else if ($scope.percentage >= 60) {
+                    $scope.grade = "B";
+                }
+                else if ($scope.percentage >= 50) {
+                    $scope.grade = "C";
+                }
+                else {
+                    $scope.grade = "D";
+                }
+
+                $scope.showResult = true;
+            };
+
+        });
+
+    </script>
+
+</body>
+
+</html>
